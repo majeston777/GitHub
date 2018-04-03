@@ -1,0 +1,63 @@
+http://kontent.co.in/merge-data-from-100s-of-excel-files-in-bulk-using-python/
+
+Merge Data From 100s of excel files in Bulk Using Python
+
+If you already work or intend to work with excels, the following tutorial would be very useful to you.
+
+Let’s say you prepare expense report for your company, and you log in daily expenses in the sheet. But what if you want to calculate all the expenses for a particular month, or even for a year? You would need to pull up each file, do copy-paste, and it may take hours to do the Job. Now, you can cut down this time to a minute of two. by using Python Modules, and do it all at once. You can even reuse the code and get this menial job done in seconds.
+
+Even if you don’t know anything about Python, or if you are a beginner, don’t worry. I have broken this down in easy steps so that you can understand. If you are an advanced python user, directly go to the code section (Third Step).
+
+Remember, the first time when you set this up, you may find this intimidating, but keep going. This will help you do this tedious task quite easily for the rest of your life. You can use it without any coding experience. I will also record a video for your convenience.
+
+First Step – Install Python
+1. Go to Python’s Official Website, and download Python. I recommend downloading version 3.5 or higher.
+
+2. Once you download it, install python, and environment variable for python. I have covered it in this python pip post.
+
+3. Once you set up the variable. Go to your command prompt (windows+r) key, and install the below modules by typing in these commands
+python –m pip install openpyxl   (For .xlsx files)
+python –m pip install xlrd  (For .xls files)
+
+4. Since you now have Python installed, open IDLE (It is a python shell, where we would be doing all of our task). IDLE looks like this
+
+Second Step – Go to the folder where you have those files
+
+    Open the folder where the excel files are located, and note down the directory.
+    In your python shell (which looks like the picture above), type the following commands after >>> (Don’t leave any spaces)
+    import openpyxl
+    import xlrd
+    import os
+    import globe
+    Now, go to the directory, you do that in python using the below command
+    os.chdir(“directory name”). Say if my directory name is C:\Users\Deepak\ExpenseSheet, the code will be os.chdir(‘C:\\Users\\Deepak\\ExpenseSheet’) {Notice the two ‘\’ instead of one. For starters, windows use one \ as a separator and python uses two, so always put two backslashes)
+
+Third Step – Code. 
+
+Now that you are in the directory, you are all set to merge the excel files. But, you may have either .xls or .xlsx files. So depending on the files that you are looking to merge, use the respective codes.
+
+a) If you want to merge .xlsx files
+
+list = glob.glob(‘*.xlsx’)
+for key in list:
+wb = openpyxl.load_workbook(key)
+sheet = wb.get_sheet_by_name(“Sheet1”)
+for j in range (1,200,1):
+print (j, sheet.cell(row =j, column =2).value)
+
+Note {Column = 2 means 2nd column, as openpyxl in the code starts counting from 1, so if you store expenses in say column 3, then  change the number to 3}
+
+a) If you want to merge .xls files
+
+list = glob.glob(‘*.xls’)
+for key in list:
+wb = xlrd.open_workbook(key)
+sheet = wb.sheet_by_index(0)
+for j in range (1,sheet.nrows,1):
+print (j, sheet.cell_value(rowx =j, colx =1))
+
+Note{colx = 1 means 2nd column, as xlrd in the code starts counting from zero, so if you store expenses in say column 3, then  change the number to 2}
+
+When you hit enter you will see all the data along with the names in the python shell, Just copy it, and paste it to a new file – which will have all your data.
+
+I hope this was easy, and as with all my posts, if you find any difficulty in using it, drop me a comment and I would be happy to help you. Python is a great language, and I encourage you to learn it.
