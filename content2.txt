@@ -3,6 +3,10 @@ import numpy as np
 import os, collections, csv
 from os.path import basename
 
+https://therevisionist.org/software-engineering/vbscript-tutorials/15-vbscript-copy-move-rename-files-folder/
+https://therevisionist.org/software-engineering/vbscript-tutorials/15-vbscript-copy-move-rename-files-folder/
+
+https://stackoverflow.com/questions/6268069/moving-and-renaming-files-using-vbscript
 # This script concatenates the sheets (named 'Table 1', 'Table 2', ... so on) of an Excel file into a single sheet. 
 df = []
 f = "/home/.../file3.xlsx" #Modify this. This is the path to the Excel file  
@@ -14,3 +18,123 @@ for i in range(1,numberOfSheets+1):
 final = "/home/.../mergedfile3.xlsx" #Path to the file in which new sheet will be saved.
 df = pd.concat(df)
 df.to_excel(final)
+
+
+https://codereview.stackexchange.com/questions/135159/python-search-for-array-in-large-text-file
+
+https://superuser.com/questions/662008/how-to-merge-data-from-multiple-excel-files-into-a-single-excel-file-or-access-d
+
+in excel:
+
+Sub Foo()
+Dim wb As Workbook
+Dim AC As Object
+Dim ret As Byte
+Const SAVE_PATH As String = "C:\myTemp\AccessUpload.xls"
+    
+    '//Save data as an xls file
+    Worksheets("Sheet1").Copy
+    Set wb = ActiveWorkbook
+    Application.DisplayAlerts = False
+    If CreateObject("Scripting.FileSystemObject").FileExists(SAVE_PATH) Then
+        Kill SAVE_PATH
+    End If
+    wb.SaveAs SAVE_PATH, 56 '//56 => Excel 2003 File Format (xls) [see http://www.rondebruin.nl/win/s5/win001.htm]
+    wb.Close False
+    Application.DisplayAlerts = True
+    
+    '//Import Spreadsheet
+    '//Note: Must set Access macro settings so that Access doesn't warn about macros when it opens
+    Set AC = CreateObject("Access.Application")
+    With AC
+        .OpenCurrentDatabase "C:\myTemp\db1.mdb", False
+        ret = .Run("GetXLData")
+    End With
+
+End Sub
+
+___________
+
+IN ACCESS (public function in a standard module):
+Code:
+
+Public Function GetXLData() As Byte
+Dim ret As Byte
+
+    On Error GoTo ErrHandler
+    ret = 1
+    DoCmd.TransferSpreadsheet acImport, acSpreadsheetTypeExcel8, "Table1", "C:\myTemp\AccessUpload.xls", True
+    ret = 0
+    
+ErrHandler:
+GetXLData = ret
+End Function
+
+
+Public Sub DoTrans()
+
+
+Set cn = CreateObject("ADODB.Connection")
+dbPath = Application.ActiveWorkbook.Path & "\FDData.mdb"
+dbWb = Application.ActiveWorkbook.FullName
+dbWs = Application.ActiveSheet.Name
+scn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & dbPath
+dsh = "[" & Application.ActiveSheet.Name & "$]"
+cn.Open scn
+ssql = "INSERT INTO fdFolio ([fdName], [fdOne], [fdTwo]) "
+ssql = ssql & "SELECT * FROM [Excel 8.0;HDR=YES;DATABASE=" & dbWb & "]." & dsh
+
+
+
+cn.Execute ssql
+
+
+End Sub
+
+https://www.mrexcel.com/forum/excel-questions/597499-send-rst-access-table.html
+
+
+Option Explicit
+
+Sub Example2()
+'the path to create the new access database
+Dim strPath As String
+'an Access object
+Dim objAccess As Object
+
+strPath = "D:\Stuff\Business\Temp\NewDB"
+Set objAccess = CreateObject("Access.Application")
+Call objAccess.OpenCurrentDatabase(strPath)
+objAccess.Visible = True
+End Sub
+Sub Example1()
+'the path to create the new access database
+Dim strPath As String
+'an Access object
+Dim objAccess As Access.Application
+Dim strExcelPath As String
+
+strPath = "D:\Stuff\Business\Temp\NewDB.accdb"
+strExcelPath = "D:\Stuff\Business\Temp\Worksheet to access Table.xlsm"
+Set objAccess = New Access.Application
+Call objAccess.OpenCurrentDatabase(strPath)
+objAccess.Visible = True
+End Sub
+Sub Example3()
+'the path to create the new access database
+Dim strPath As String
+'an Access object
+Dim objAccess As Access.Application
+Dim strExcelPath As String
+
+strPath = "D:\Stuff\Business\Temp\NewDB.accdb"
+strExcelPath = "D:\Stuff\Business\Temp\Worksheet to Existing access table.xlsm"
+Set objAccess = New Access.Application
+Call objAccess.OpenCurrentDatabase(strPath)
+objAccess.Visible = True
+Call objAccess.DoCmd.TransferSpreadsheet(acImport, acSpreadsheetTypeExcel8, _
+"MyTable1", strExcelPath, True, "A1:D11")
+End Sub
+
+
+
